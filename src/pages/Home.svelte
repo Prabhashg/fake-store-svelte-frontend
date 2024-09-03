@@ -98,12 +98,14 @@
             <div class="product-form-container">
                 <AddProduct on:addProductSubmit={ fetchProducts }/>
             </div>
+            <RecordsInput on:recordsPerPageSubmit={ fetchProducts } />
         {/if}
-        <RecordsInput on:recordsPerPageSubmit={ fetchProducts } />
         <div class="table-container">
             <Table />
         </div>
-        <Pagination on:pageChange={ fetchProducts } />
+        {#if $is_user_logged_in}
+            <Pagination on:pageChange={ fetchProducts } />
+        {/if}
     </div>
 </main>
 
