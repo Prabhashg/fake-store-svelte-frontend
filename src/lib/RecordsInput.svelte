@@ -1,8 +1,5 @@
 <script>
     import { page_number, records_per_page } from "../store";
-    import { createEventDispatcher } from "svelte";
-
-    const dispatch = createEventDispatcher();
 
     let records=10;
 
@@ -10,7 +7,6 @@
         
         records_per_page.set(records);
         page_number.set(1);
-        dispatch("recordsPerPageSubmit")
 
     }
 </script>

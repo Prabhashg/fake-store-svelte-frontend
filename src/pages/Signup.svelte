@@ -63,7 +63,7 @@
 
 <style>
     .outer{
-        width: 90%;
+        width: 80%;
         margin: auto;
     }
 

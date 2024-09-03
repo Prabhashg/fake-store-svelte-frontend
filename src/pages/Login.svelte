@@ -30,7 +30,7 @@
                 push('/')
             } else {
                 alert('Invalid Credentials')
-                document.getElementsByTagName('form').reset()
+                document.getElementsByTagName('form')[0].reset()
             }
         } catch (error) {
             error_msg.set("CONNECTION_REFUSED")
@@ -57,7 +57,7 @@
     .outer{
         display: flex;
         flex-direction: column;
-        width: 90%;
+        width: 80%;
         margin: auto;
     }
 

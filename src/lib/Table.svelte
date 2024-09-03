@@ -1,9 +1,10 @@
 <script>
-    import { is_user_logged_in, table_data, error_msg } from "../store"
-    import { createEventDispatcher } from "svelte";
+    import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, fetchProducts } from "../store"
+    import { onMount } from "svelte";
 
-    const dispatch = createEventDispatcher();
-    
+    $: dependencyVar = $page_number + " " + $records_per_page
+    $: dependencyVar, $fetchProducts();
+
     const deleteProduct = async (productId) => {
         const confirm_delete = confirm("Do you really want to delete?")
 
@@ -21,7 +22,7 @@
                 }).then(res => res.json())
 
                 if(response.ok){
-                    dispatch("deleteItem")
+                    $fetchProducts()
                     alert("Product deleted successfully")
                 } else {
                     alert("Something went wrong")
@@ -32,6 +33,7 @@
         }
     }
 
+    onMount($fetchProducts)
 </script>
 
 <main>

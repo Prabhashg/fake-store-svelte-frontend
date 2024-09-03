@@ -1,6 +1,6 @@
 <script>
     import { push } from "svelte-spa-router"
-    import { is_user_logged_in } from "../store"
+    import { is_user_logged_in, page_number, records_per_page } from "../store"
     import { onMount } from "svelte";
 
     const handleHome = () => {
@@ -16,6 +16,9 @@
     }
 
     const handleLogout = async () => {
+        page_number.set(1)
+        records_per_page.set(10)
+
         let url = "http://localhost:8080/api/v1/users/logout"
         const response = await fetch(url, {
             method: "POST", 

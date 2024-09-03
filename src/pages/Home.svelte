@@ -4,91 +4,8 @@
     import Pagination from "../lib/Pagination.svelte"
     import Table from "../lib/Table.svelte";
     import AddProduct from "../lib/AddProduct.svelte";
-    import { is_user_logged_in, table_data, records_per_page, page_number, total_records, error_msg, max_page } from "../store";
-    import { onMount } from "svelte";
-
-    let table_data_value
-    let records_per_page_value
-    let page_number_value
-
-    table_data.subscribe((value) => {
-        table_data_value = value
-    });
-
-    records_per_page.subscribe(val => {
-        records_per_page_value = val
-        
-    })
-
-    page_number.subscribe(val => {
-        page_number_value = val
-        
-    })
-
-    const fetchLength = async () => {
-        const url = "http://localhost:8080/api/v1/products/length"
-
-        try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: {
-                    "Content-Type" : "application/json"
-                },
-                credentials: "include"
-            }).then(res => res.json())
-
-            if(response.ok){
-                total_records.set(response.data.length.count)
-            }
-
-        } catch (error) {
-            console.log(error)
-        }   
-    }
-
-    const fetchProducts = async () => {
+    import { is_user_logged_in } from "../store";
     
-        fetchLength();
-        
-
-        let baseURL = 'http://localhost:8080/api/v1/products'
-        let params = {
-            page: page_number_value,
-            records: records_per_page_value
-        }
-
-        let url = new URL(baseURL);
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-        
-        try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: {
-                    "Content-Type" : "application/json"
-                },
-                credentials: "include"
-            }).then(res => res.json())
-    
-            if(response.ok){
-                table_data.set(response.data)
-                max_page.set(Math.ceil($total_records / $records_per_page))
-            } else {
-                error_msg.set("Error in fetching data from server")
-            }
-
-            if(Object.keys(table_data_value).length === 0){
-                error_msg.set("No data available on server")
-            } else {
-                error_msg.set("")
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        
-    }
-
-    onMount(fetchLength)
-    onMount(fetchProducts)
 </script>
 
 <main>
@@ -96,15 +13,15 @@
         <Header />
         {#if $is_user_logged_in}
             <div class="product-form-container">
-                <AddProduct on:addProductSubmit={ fetchProducts }/>
+                <AddProduct />
             </div>
-            <RecordsInput on:recordsPerPageSubmit={ fetchProducts } />
+            <RecordsInput />
         {/if}
         <div class="table-container">
-            <Table on:deleteItem={fetchProducts}/>
+            <Table />
         </div>
         {#if $is_user_logged_in}
-            <Pagination on:pageChange={ fetchProducts } />
+            <Pagination />
         {/if}
     </div>
 </main>

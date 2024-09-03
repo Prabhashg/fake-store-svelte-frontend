@@ -1,8 +1,6 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-
-    const dispatch = createEventDispatcher();
-
+    import { fetchProducts } from "../store";
+    
     let id;
     let title;
     let description;
@@ -35,13 +33,13 @@
         }).then(res => res.json())
 
         if (response.ok) {
+            $fetchProducts();
             alert(response.message)
         } else {
             alert("Try again")
         }
 
         document.getElementsByTagName('form')[0].reset()
-        dispatch("addProductSubmit")
     }
 </script>
 

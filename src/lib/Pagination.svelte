@@ -1,9 +1,6 @@
 <script>
 
     import { page_number, max_page } from "../store";
-    import { createEventDispatcher } from "svelte";
-
-    const dispatch = createEventDispatcher();
 
     let page_nubmer_value;
 
@@ -15,28 +12,24 @@
     const handleStartClick = () => {
         if(page_nubmer_value > 1){
             page_number.set(1)
-            dispatch("pageChange")
         }
     }
 
     const handlePreviousClick = () => {
         if(page_nubmer_value > 1){
             page_number.update(val => val - 1)
-            dispatch("pageChange")
         }
     }
 
     const handleNextClick = () => {
         if(page_nubmer_value < $max_page){
             page_number.update(val => val + 1)
-            dispatch("pageChange")
         }
     }
 
     const handleEndClick = () => {
         if(page_nubmer_value < $max_page){
             page_number.set($max_page)
-            dispatch("pageChange")
         }
     }
 </script>
