@@ -1,7 +1,37 @@
 <script>
     import { is_user_logged_in, table_data, error_msg } from "../store"
+    import { createEventDispatcher } from "svelte";
 
+    const dispatch = createEventDispatcher();
     
+    const deleteProduct = async (productId) => {
+        const confirm_delete = confirm("Do you really want to delete?")
+
+        if (confirm_delete) {
+            const url = `http://localhost:8080/api/v1/products/${productId}`
+
+            try {
+                const response = await fetch(url, {
+                    method: "DELETE",
+                    headers : {
+                        "Content-Type" : "application/json",
+                    },
+                    credentials: "include"
+        
+                }).then(res => res.json())
+
+                if(response.ok){
+                    dispatch("deleteItem")
+                    alert("Product deleted successfully")
+                } else {
+                    alert("Something went wrong")
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
 </script>
 
 <main>
@@ -29,8 +59,12 @@
                             <img
                                 src={product.img_url}
                                 alt=""
-                                style="width:60px; height:60px;"
+                                style="width: 60px; height: 60px;"
                             />
+                            <button on:click={() => {
+                                deleteProduct(product.id)
+                            }}>Delete</button>
+                            
                         </td>
                     </tr>
                 {:else}
@@ -43,8 +77,8 @@
                         <td>
                             <img
                                 src="#"
-                                alt="Error in fetching image"
-                                style="width:60px; height:60px; padding-left: 30px"
+                                alt="Error in fetching"
+                                style="width:60px; height:60px;"
                             />
                         </td>
                     </tr>
@@ -94,5 +128,24 @@
 
     th:last-child {
         border-radius: 0px 20px 0px 0px;
+    }
+
+    button{
+        position: relative;
+        left: 190px;
+        bottom: 23px;
+        background-color: #d11a2a;
+        height: 28px;
+        border-radius: 4px;
+        color: white;
+        font-weight: 600;
+        box-shadow: 2px 2px 4px rgb(50, 50, 50);
+        cursor: pointer;
+    }
+
+    img{
+        position: relative;
+        top: 6px;
+        left: 30px;
     }
 </style>

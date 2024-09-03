@@ -101,7 +101,7 @@
             <RecordsInput on:recordsPerPageSubmit={ fetchProducts } />
         {/if}
         <div class="table-container">
-            <Table />
+            <Table on:deleteItem={fetchProducts}/>
         </div>
         {#if $is_user_logged_in}
             <Pagination on:pageChange={ fetchProducts } />
@@ -113,7 +113,7 @@
     .container{
         display: flex;
         flex-direction: column;
-        width: 90%;
+        width: 80%;
         margin: auto;
     }
 
