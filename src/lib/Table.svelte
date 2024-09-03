@@ -20,43 +20,26 @@
             <tbody id="products">
                 {#each $table_data as product}
                     <tr>
-                        <td style="color: rgb(233, 233, 233); padding-left: 2%; width: 5%"
-                            >{product.id}</td
-                        >
-                        <td style="color: rgba(198,245,248,255); padding-left: 20px;"
-                            >{product.title}</td
-                        >
-                        <td style="color: rgb(233, 233, 233); padding-left: 10px;"
-                            >{product.description}</td
-                        >
-                        <td style="color: rgb(233, 233, 233); padding: 60px"
-                            >${product.price}</td
-                        >
-                        <td style="color: rgb(233, 233, 233); padding-left: 70px"
-                            >{product.rating_rate} <br /> ({product
-                                .rating_count})</td
-                        >
+                        <td>{product.id}</td>
+                        <td style="color: rgba(198,245,248,255);">{product.title}</td>
+                        <td>{product.description}</td>
+                        <td>${product.price}</td>
+                        <td>{product.rating_rate} <br /> ({product.rating_count})</td>
                         <td>
                             <img
                                 src={product.img_url}
                                 alt=""
-                                style="width:60px; height:60px; padding-left: 30px"
+                                style="width:60px; height:60px;"
                             />
                         </td>
                     </tr>
                 {:else}
                     <tr>
-                        <td style="color: rgb(233, 233, 233); padding: 2%"></td>
-                        <td style="color: rgba(198,245,248,255); padding-left: 20px;"
-                            ></td
-                        >
-                        <td style="color: rgb(233, 233, 233); padding-left: 10px;"
-                            ></td
-                        >
-                        <td style="color: rgb(233, 233, 233); padding: 60px"></td>
-                        <td style="color: rgb(233, 233, 233); padding-left: 70px"
-                            ></td
-                        >
+                        <td></td>
+                        <td style="color: rgba(198,245,248,255);"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>
                             <img
                                 src="#"
@@ -91,6 +74,11 @@
     td,
     th {
         border-top: 1px solid rgba(50, 50, 50, 255);
+        text-align: center;
+    }
+
+    td{
+        color: rgb(233, 233, 233)
     }
 
     th {
