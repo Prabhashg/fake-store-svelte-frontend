@@ -45,7 +45,7 @@
         <form>
             <div class="container">
                 <input type="email" name="email" placeholder="Email" bind:value={email}>
-                <input type="text" name="password" placeholder="Password" bind:value={password}>
+                <input type="password" name="password" placeholder="Password" bind:value={password}>
                 <button on:click={handleSubmit}>Login</button>
             </div>
         </form>

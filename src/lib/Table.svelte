@@ -37,7 +37,7 @@
 </script>
 
 <main>
-    {#if $is_user_logged_in}
+    { #if $is_user_logged_in }
         <table>
             <thead>
                 <tr id="heading">
@@ -50,7 +50,7 @@
                 </tr>
             </thead>
             <tbody id="products">
-                {#each $table_data as product}
+                { #each $table_data as product }
                     <tr>
                         <td>{product.id}</td>
                         <td style="color: rgba(198,245,248,255);">{product.title}</td>
@@ -87,7 +87,7 @@
                 {/each}
             </tbody>
         </table>
-        <p style="color: white; width: 90%; margin: 10px auto">{$error_msg}</p>
+        <p style="color: white; width: 80%; margin: 10px auto">{$error_msg}</p>
     {:else}
         <p style="color: white; font-weight: 700; text-align: center; height: 40vh">Please login to continue</p>
     {/if}
