@@ -1,5 +1,6 @@
 <script>
-    import { fetchProducts } from "../store";
+    import { push } from "svelte-spa-router";
+    import { fetchProducts, is_user_logged_in } from "../store";
     
     let id;
     let title;
@@ -11,6 +12,17 @@
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        if (!id ||
+            !title ||
+            !description ||
+            !rating_rate ||
+            !rating_count ||
+            !price ||
+            !img_url
+        ) {
+            return alert("All Fields Required")
+        }
 
         const url = "http://localhost:8080/api/v1/products/register"
         const response = await fetch(url, {
@@ -31,12 +43,18 @@
 
             credentials: "include"
         }).then(res => res.json())
-        console.log(response)
+        
         if (response.ok) {
             $fetchProducts();
-            alert(response.message)
+            alert("Product Added Successfully")
         } else {
-            alert("Try again")
+            if (response.status === 400) {
+                alert(`Product with id: ${id} already exists`)
+            } else {
+                is_user_logged_in.set(false)
+                document.cookie = "SID="
+                push("/")
+            }
         }
 
         document.getElementsByTagName('form')[0].reset()

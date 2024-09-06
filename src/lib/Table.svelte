@@ -23,9 +23,9 @@
 
                 if(response.ok){
                     $fetchProducts()
-                    alert("Product deleted successfully")
+                    alert("Product Deleted Successfully")
                 } else {
-                    alert("Something went wrong")
+                    alert("Something Went Wrong")
                 }
             } catch (error) {
                 console.log(error)
@@ -64,7 +64,7 @@
                                 style="width: 60px; height: 60px;"
                             />
                             <button on:click={() => {
-                                deleteProduct(product.id)
+                                deleteProduct(product.product_id)
                             }}>Delete</button>
                             
                         </td>

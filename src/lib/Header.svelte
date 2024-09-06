@@ -20,7 +20,7 @@
         records_per_page.set(10)
 
         let url = "http://localhost:8080/api/v1/users/logout"
-        const response = await fetch(url, {
+        await fetch(url, {
             method: "POST", 
             headers: {
                 "Content-Type" : "application/json"
@@ -28,17 +28,12 @@
             credentials: "include"
         }).then(res => res.json())
 
-        if (response.ok){
-            is_user_logged_in.set(false)
-            push('/')
-        } else {
-            alert("Something went wrong")
-        }
-
+        is_user_logged_in.set(false)
+        push("/")
     }
 
     const initiateHeader = async () => {
-        if (document.cookie === "") is_user_logged_in.set(false)
+        if (document.cookie === "" || document.cookie.SID === "") is_user_logged_in.set(false)
         else is_user_logged_in.set(true)
     }
 
