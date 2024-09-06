@@ -21,7 +21,7 @@ const fetchLength = async () => {
         }).then(res => res.json())
 
         if(response.ok){
-            total_records.set(response.data.length.count)
+            total_records.set(response.data.length)
         }
 
     } catch (error) {

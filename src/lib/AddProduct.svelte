@@ -31,7 +31,7 @@
 
             credentials: "include"
         }).then(res => res.json())
-
+        console.log(response)
         if (response.ok) {
             $fetchProducts();
             alert(response.message)

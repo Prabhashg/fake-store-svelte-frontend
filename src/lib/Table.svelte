@@ -52,7 +52,7 @@
             <tbody id="products">
                 { #each $table_data as product }
                     <tr>
-                        <td>{product.id}</td>
+                        <td>{product.product_id}</td>
                         <td style="color: rgba(198,245,248,255);">{product.title}</td>
                         <td>{product.description}</td>
                         <td>${product.price}</td>
