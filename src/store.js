@@ -7,6 +7,7 @@ export const max_page = writable(4);
 export const is_user_logged_in = writable(false);
 export const table_data = writable([]);
 export const error_msg = writable("");
+export const selectedProductForUpdate = writable(null)
 
 const fetchLength = async () => {
     const url = "http://localhost:8080/api/v1/products/length"
@@ -36,19 +37,19 @@ export const fetchProducts = readable(async () => {
     let total_records_value
     let table_data_value
 
-    page_number.subscribe(val => {
+    const unsubscribePageNumber = page_number.subscribe(val => {
         page_number_value = val
     })
 
-    records_per_page.subscribe(val => {
+    const unsubscribeRPP = records_per_page.subscribe(val => {
         records_per_page_value = val
     })
 
-    total_records.subscribe(val => {
+    const unsubscribeTotalRecords = total_records.subscribe(val => {
         total_records_value = val
     })
 
-    table_data.subscribe(val => {
+    const unsubscribeTableData = table_data.subscribe(val => {
         table_data_value = val
     })
     
@@ -87,4 +88,9 @@ export const fetchProducts = readable(async () => {
         } catch (error) {
             console.log(error)
         }
+
+        unsubscribePageNumber()
+        unsubscribeRPP()
+        unsubscribeTableData()
+        unsubscribeTotalRecords()
 })

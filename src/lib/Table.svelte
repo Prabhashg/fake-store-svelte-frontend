@@ -1,9 +1,21 @@
 <script>
-    import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, fetchProducts } from "../store"
+    import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, selectedProductForUpdate, fetchProducts } from "../store"
     import { onMount } from "svelte";
+    import ProductModal from "./productModal.svelte";
 
-    $: dependencyVar = $page_number + " " + $records_per_page
-    $: dependencyVar, $fetchProducts();
+    $: $page_number, $records_per_page, $fetchProducts();
+
+    let isModalOpen = false
+
+    const openEditModal = (product) => {
+        selectedProductForUpdate.set(product)
+        isModalOpen = true
+    };
+
+    const closeModal = () => {
+        selectedProductForUpdate.set(null)
+        isModalOpen = false
+    };
 
     const deleteProduct = async (productId) => {
         const confirm_delete = confirm("Do you really want to delete?")
@@ -23,7 +35,6 @@
 
                 if(response.ok){
                     $fetchProducts()
-                    alert("Product Deleted Successfully")
                 } else {
                     alert("Something Went Wrong")
                 }
@@ -33,12 +44,25 @@
         }
     }
 
-    onMount($fetchProducts)
+    onMount(() => {
+        if ($is_user_logged_in) {
+            $fetchProducts();
+        }
+    })
+   
 </script>
 
 <main>
     { #if $is_user_logged_in }
-        <table>
+        <table id="myTable">
+            <colgroup>
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+                <col style="width: 40%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+            </colgroup>
             <thead>
                 <tr id="heading">
                     <th>Id</th>
@@ -53,19 +77,33 @@
                 { #each $table_data as product }
                     <tr>
                         <td>{product.product_id}</td>
-                        <td style="color: rgba(198,245,248,255);">{product.title}</td>
-                        <td>{product.description}</td>
+                        <td style="color: rgba(198,245,248,255); text-align: left">{product.title}</td>
+                        <td style="text-align: left;">{product.description}</td>
                         <td>${product.price}</td>
                         <td>{product.rating_rate} <br /> ({product.rating_count})</td>
                         <td>
                             <img
-                                src={product.img_url}
+                                src={product.image_url}
                                 alt=""
                                 style="width: 60px; height: 60px;"
                             />
-                            <button on:click={() => {
-                                deleteProduct(product.product_id)
-                            }}>Delete</button>
+                            <div class="delete-edit">
+                                <button class="delete-btn" on:click={() => {
+                                    deleteProduct(product.product_id)
+                                }}>
+                                    <i class="fas fa-trash"></i>
+                                    
+                                </button>
+                                <button class="edit-btn" on:click={() => {
+                                    openEditModal(product)
+                                }}>
+                                    <i class="fas fa-edit"></i>
+                                    
+                                </button>
+
+                                
+                            </div>
+                            
                             
                         </td>
                     </tr>
@@ -91,6 +129,13 @@
     {:else}
         <p style="color: white; font-weight: 700; text-align: center; height: 40vh">Please login to continue</p>
     {/if}
+
+    { #if isModalOpen}
+        <ProductModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+        />  
+    {/if}
 </main>
 
 
@@ -103,9 +148,12 @@
     }
 
     table {
+        table-layout: fixed;
         border: 1px solid rgba(50, 50, 50, 255);
         border-radius: 20px 20px 0 0;
     }
+
+    
 
     td,
     th {
@@ -114,7 +162,8 @@
     }
 
     td{
-        color: rgb(233, 233, 233)
+        color: rgb(233, 233, 233);
+        height: 20px;
     }
 
     th {
@@ -132,9 +181,9 @@
         border-radius: 0px 20px 0px 0px;
     }
 
-    button{
+    /* button{
         position: relative;
-        left: 190px;
+        left: 80px;
         bottom: 23px;
         background-color: #d11a2a;
         height: 28px;
@@ -143,11 +192,47 @@
         font-weight: 600;
         box-shadow: 2px 2px 4px rgb(50, 50, 50);
         cursor: pointer;
+    } */
+
+    tr {
+        padding: 6px;
+        margin: 10px 0;
     }
 
     img{
         position: relative;
-        top: 6px;
-        left: 30px;
+        left: 35px;
+    }
+
+    .delete-edit {
+        display: inline-flex;
+        /* gap: 10px; */
+        position: relative;
+        left: 85px;
+        bottom: 20px;
+    }
+    .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        color: red;
+    }
+
+    .delete-btn:hover {
+        color: darkred;
+    }
+
+    .edit-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        color: #4A90E2;
+    }
+
+    .edit-btn:hover {
+        cursor: pointer;
+        color: #357ABD;
     }
 </style>
