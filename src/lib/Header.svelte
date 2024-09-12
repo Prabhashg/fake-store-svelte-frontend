@@ -2,38 +2,66 @@
     import { push } from "svelte-spa-router"
     import { is_user_logged_in, page_number, records_per_page } from "../store"
     import { onMount } from "svelte";
+    import AddModal from "./AddModal.svelte";
 
-    const handleHome = () => {
+    let isAddModalOpen = false
+
+    const handleHomeClick = () => {
+        page_number.set(1)
+        records_per_page.set(10)
         push('/')
     }
 
-    const handleLogin = () => {
+    const handleLoginClick = () => {
         push('/login')
     }
 
-    const handleSignup = () => {
+    const handleSignupClick = () => {
         push('/signup')
     }
 
-    const handleLogout = async () => {
+    const handleAddProductClick = () => {
+        isAddModalOpen = true
+    }
+
+    const closeAddModal = () => {
+        isAddModalOpen = false
+    }
+
+    const handleLogoutClick = async () => {
         page_number.set(1)
         records_per_page.set(10)
 
-        let url = "http://localhost:8080/api/v1/users/logout"
-        await fetch(url, {
-            method: "POST", 
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            credentials: "include"
-        }).then(res => res.json())
+        try {
+            let url = "http://localhost:8080/api/v1/users/logout"
+            const response = await fetch(url, {
+                method: "POST", 
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                credentials: "include"
+            }).then(res => res.json())  
+
+            if(response.status === 401){
+                console.log(response.message)
+                console.log("Clearing cookie from frontend")
+                document.cookie = "SID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None"
+                console.log("Cookie cleared")
+            }
+
+            
+        } catch (error) {
+            document.cookie = "SID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None"
+            console.error(error)
+
+        }
 
         is_user_logged_in.set(false)
         push("/")
     }
 
     const initiateHeader = async () => {
-        if (document.cookie === "" || document.cookie.SID === "") is_user_logged_in.set(false)
+        if (document.cookie === "") is_user_logged_in.set(false)
         else is_user_logged_in.set(true)
     }
 
@@ -43,20 +71,26 @@
 <main>
     <div class="container">
         <div id="left-box">
-            <h1 on:click={handleHome}>Fake Store</h1>
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <h1 on:click={handleHomeClick}>Fake Store</h1>
         </div>
         {#if !$is_user_logged_in}
             <div id="right-box">
-                <button on:click={handleLogin}>Login</button>
-                <button on:click={handleSignup}>Sign Up</button>
+                <button on:click={handleLoginClick}>Login</button>
+                <button on:click={handleSignupClick}>Sign Up</button>
             </div>
         {:else}
             <div id="right-box">
-                <button on:click={handleLogout}>Logout</button>
+                <button on:click={handleAddProductClick}>New Product</button>
+                <button on:click={handleLogoutClick}>Logout</button>
             </div>
         {/if}
         
     </div>
+    {#if isAddModalOpen}
+        <AddModal onClose={closeAddModal}/>
+    {/if}
 
 </main>
 
@@ -96,7 +130,5 @@
 
     button:active{
         background-color: rgb(26, 65, 36);
-        width: 76px;
-        height: 38px;
     }
 </style>

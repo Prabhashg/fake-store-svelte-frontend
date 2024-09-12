@@ -3,8 +3,8 @@
     import RecordsInput from "../lib/RecordsInput.svelte";
     import Pagination from "../lib/Pagination.svelte"
     import Table from "../lib/Table.svelte";
-    import AddProduct from "../lib/AddProduct.svelte";
     import { is_user_logged_in } from "../store";
+    // import AddProduct from "../lib/AddProduct.svelte";
     
 </script>
 
@@ -12,9 +12,9 @@
     <div class="container">
         <Header />
         {#if $is_user_logged_in}
-            <div class="product-form-container">
+            <!-- <div class="product-form-container">
                 <AddProduct />
-            </div>
+            </div> -->
             <RecordsInput />
         {/if}
         <div class="table-container">
@@ -34,12 +34,12 @@
         margin: auto;
     }
 
-    .product-form-container{
+    /* .product-form-container{
         display: inline-block;
         width: 46%;
         min-width: 516px;
         margin: auto;
-    }
+    } */
 
     .table-container{
         display: flex;

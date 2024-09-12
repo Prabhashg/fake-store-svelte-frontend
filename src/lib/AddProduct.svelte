@@ -45,7 +45,7 @@
         }).then(res => res.json())
         
         if (response.ok) {
-            $fetchProducts();
+            fetchProducts();
             alert("Product Added Successfully")
         } else {
             if (response.status === 400) {

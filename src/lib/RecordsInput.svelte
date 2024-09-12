@@ -1,13 +1,15 @@
 <script>
     import { page_number, records_per_page } from "../store";
 
-    let records=10;
+    let records_per_page_value
+
+    records_per_page.subscribe(val => {
+        records_per_page_value = val
+    })
 
     const handleClick = () => {
-        
-        records_per_page.set(records);
+        records_per_page.set(records_per_page_value)
         page_number.set(1);
-
     }
 </script>
 
@@ -16,7 +18,7 @@
         <div class="inner">
             <span>
                 <label for="records" style="color: white;">Records</label>
-                <input type="number" name="records" bind:value={records}>
+                <input type="number" name="records" bind:value={records_per_page_value}>
             </span>
             <span>
                 <button on:click={handleClick}>OK</button>

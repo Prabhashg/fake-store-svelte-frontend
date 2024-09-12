@@ -1,34 +1,26 @@
 <script>
-
     import { page_number, max_page } from "../store";
-
-    let page_nubmer_value;
-
-    page_number.subscribe((val) => {
-        page_nubmer_value = val;
-    })
     
-
     const handleStartClick = () => {
-        if(page_nubmer_value > 1){
+        if($page_number > 1){
             page_number.set(1)
         }
     }
 
     const handlePreviousClick = () => {
-        if(page_nubmer_value > 1){
+        if($page_number > 1){
             page_number.update(val => val - 1)
         }
     }
 
     const handleNextClick = () => {
-        if(page_nubmer_value < $max_page){
+        if($page_number < $max_page){
             page_number.update(val => val + 1)
         }
     }
 
     const handleEndClick = () => {
-        if(page_nubmer_value < $max_page){
+        if($page_number < $max_page){
             page_number.set($max_page)
         }
     }
@@ -38,7 +30,7 @@
     <div class="container">
         <button on:click={handleStartClick}>Start</button>
         <button on:click={handlePreviousClick}> Prev </button>
-        <input type="text" bind:value={page_nubmer_value}>
+        <input type="text" bind:value={$page_number} disabled>
         <button on:click={handleNextClick}>Next</button>
         <button on:click={handleEndClick}>End</button>
     </div>    
@@ -72,4 +64,8 @@
         width: 100px;
         height: 23px;
     }
+
+     input:disabled{
+        background-color: white;
+     }
 </style>

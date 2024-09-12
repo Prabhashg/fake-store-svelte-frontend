@@ -7,8 +7,7 @@
     let email;
     let password;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmitClick = async () => {
         let url = "http://localhost:8080/api/v1/users/signup";
 
         if(!name || 
@@ -54,7 +53,7 @@
                 <input type="text" name="name" placeholder="Name" bind:value={name}>
                 <input type="email" name="email" placeholder="Email" bind:value={email}>
                 <input type="text" name="password" placeholder="Password" bind:value={password}>
-                <button on:click={handleSubmit}>Sign Up</button>
+                <button on:click|preventDefault={handleSubmitClick}>Sign Up</button>
             </div>
         </form>
     </div>

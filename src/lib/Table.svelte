@@ -1,20 +1,19 @@
 <script>
-    import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, selectedProductForUpdate, fetchProducts } from "../store"
+    import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, fetchProducts } from "../store"
     import { onMount } from "svelte";
-    import ProductModal from "./productModal.svelte";
+    import EditModal from "./EditModal.svelte";
 
-    $: $page_number, $records_per_page, $fetchProducts();
-
-    let isModalOpen = false
+    let productToEdit = null
+    let isEditModalOpen = false
 
     const openEditModal = (product) => {
-        selectedProductForUpdate.set(product)
-        isModalOpen = true
+        productToEdit = product
+        isEditModalOpen = true
     };
 
-    const closeModal = () => {
-        selectedProductForUpdate.set(null)
-        isModalOpen = false
+    const closeEditModal = () => {
+        productToEdit = null
+        isEditModalOpen = false
     };
 
     const deleteProduct = async (productId) => {
@@ -34,7 +33,7 @@
                 }).then(res => res.json())
 
                 if(response.ok){
-                    $fetchProducts()
+                    fetchProducts()
                 } else {
                     alert("Something Went Wrong")
                 }
@@ -46,21 +45,23 @@
 
     onMount(() => {
         if ($is_user_logged_in) {
-            $fetchProducts();
+            fetchProducts();
         }
     })
-   
+
+    $: $page_number, $records_per_page, fetchProducts();
 </script>
 
 <main>
     { #if $is_user_logged_in }
         <table id="myTable">
             <colgroup>
+                <col style="width: 8%;">
+                <col style="width: 10%;">
+                <col style="width: 32%;">
+                <col style="width: 10%;">
                 <col style="width: 10%;">
                 <col style="width: 15%;">
-                <col style="width: 40%;">
-                <col style="width: 10%;">
-                <col style="width: 10%;">
                 <col style="width: 15%;">
             </colgroup>
             <thead>
@@ -71,10 +72,11 @@
                     <th>Price</th>
                     <th>Rating</th>
                     <th>Image</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="products">
-                { #each $table_data as product }
+                { #each $table_data as product (product.product_id) }
                     <tr>
                         <td>{product.product_id}</td>
                         <td style="color: rgba(198,245,248,255); text-align: left">{product.title}</td>
@@ -86,25 +88,17 @@
                                 src={product.image_url}
                                 alt=""
                                 style="width: 60px; height: 60px;"
-                            />
+                            />                            
+                        </td>
+                        <td>
                             <div class="delete-edit">
-                                <button class="delete-btn" on:click={() => {
-                                    deleteProduct(product.product_id)
-                                }}>
+                                <button class="delete-btn" on:click={() => deleteProduct(product.product_id)}>
                                     <i class="fas fa-trash"></i>
-                                    
                                 </button>
-                                <button class="edit-btn" on:click={() => {
-                                    openEditModal(product)
-                                }}>
+                                <button class="edit-btn" on:click={() => openEditModal(product)}>
                                     <i class="fas fa-edit"></i>
-                                    
                                 </button>
-
-                                
                             </div>
-                            
-                            
                         </td>
                     </tr>
                 {:else}
@@ -116,11 +110,12 @@
                         <td></td>
                         <td>
                             <img
-                                src="#"
+                                src={"#"}
                                 alt="Error in fetching"
                                 style="width:60px; height:60px;"
                             />
                         </td>
+                        <td></td>
                     </tr>
                 {/each}
             </tbody>
@@ -130,14 +125,13 @@
         <p style="color: white; font-weight: 700; text-align: center; height: 40vh">Please login to continue</p>
     {/if}
 
-    { #if isModalOpen}
-        <ProductModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
+    { #if isEditModalOpen}
+        <EditModal
+            product={productToEdit}
+            onClose={closeEditModal}
         />  
     {/if}
 </main>
-
 
 
 <style>
@@ -153,10 +147,7 @@
         border-radius: 20px 20px 0 0;
     }
 
-    
-
-    td,
-    th {
+    td, th {
         border-top: 1px solid rgba(50, 50, 50, 255);
         text-align: center;
     }
@@ -181,36 +172,11 @@
         border-radius: 0px 20px 0px 0px;
     }
 
-    /* button{
-        position: relative;
-        left: 80px;
-        bottom: 23px;
-        background-color: #d11a2a;
-        height: 28px;
-        border-radius: 4px;
-        color: white;
-        font-weight: 600;
-        box-shadow: 2px 2px 4px rgb(50, 50, 50);
-        cursor: pointer;
-    } */
-
     tr {
         padding: 6px;
         margin: 10px 0;
     }
 
-    img{
-        position: relative;
-        left: 35px;
-    }
-
-    .delete-edit {
-        display: inline-flex;
-        /* gap: 10px; */
-        position: relative;
-        left: 85px;
-        bottom: 20px;
-    }
     .delete-btn {
         background: none;
         border: none;
