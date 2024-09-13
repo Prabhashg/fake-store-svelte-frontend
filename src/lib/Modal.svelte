@@ -1,22 +1,78 @@
 <script>
-    import { fetchProducts, is_user_logged_in } from "../store"
-    import { push } from "svelte-spa-router";
+    import { push } from "svelte-spa-router"
+    import { is_user_logged_in, fetchProducts } from "../store"
 
     export let onClose
     export let product
+    export let add_or_edit_string
+    export let isIdDisabled
+
+    let id = product?.product_id || ""
+    let title = product?.title || ""
+    let description = product?.description || ""
+    let rating_rate = product?.rating_rate || ""
+    let rating_count = product?.rating_count || ""
+    let price = product?.price || ""
+    let img_url = product?.image_url || ""
 
 
-    let id = product.product_id || ''
-    let title = product.title || ''
-    let description = product.description || ''
-    let price = product.price || ''
-    let rating_rate = product.rating_rate || ''
-    let rating_count = product.rating_count || ''
-    let image_url = product.image_url || ''
 
-    const save = async () => {
+    const addProduct = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/products/${product.product_id}`,{
+            if (
+                    !id || 
+                    !title || 
+                    !description || 
+                    !rating_rate || 
+                    !rating_count || 
+                    !price || 
+                    !img_url 
+                ) {
+                return alert("All Fields Required")
+            }
+
+            const url = "http://localhost:8080/api/v1/products/register"
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+
+                body: JSON.stringify({
+                    id,
+                    title,
+                    description,
+                    rating_rate,
+                    rating_count,  
+                    price,
+                    img_url
+                }),
+
+                credentials: "include"
+            }).then(res => res.json())
+            
+            if (response.ok) {
+                fetchProducts();
+                alert("Product Added Successfully")
+            } else {
+                if (response.status === 400) {
+                    alert(`Product with id: ${id} already exists`)
+                } else {
+                    document.cookie = "SID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None"
+                    is_user_logged_in.set(false)
+                    push("/")
+                }
+            }
+        } catch (error) {
+            console.error("Error while adding product:", error)
+            alert("An error occurred while adding the product.")
+        }
+        close()
+    }
+
+    const updateProduct = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/products/${id}`,{
                 method: "PUT",
                 headers: {
                     "Content-Type" : "application/json"
@@ -27,7 +83,7 @@
                     rating_rate,
                     rating_count,
                     price,
-                    img_url: image_url
+                    img_url
                 }),
                 credentials: "include"
             }).then(res => res.json()).catch(err => console.log("Error occured while updating: ", err))
@@ -53,14 +109,24 @@
     const close = () => {
         onClose();
     }
-</script>
 
+    const save = () => {
+        if(add_or_edit_string === "Add"){
+            addProduct()
+        } else {
+            updateProduct()
+        }
+    }
+
+    
+
+</script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="modal-overlay" on:click|self={close}>
     <div class="modal-content">
-        <h2>Edit Product</h2>
+        <h2>{add_or_edit_string} Product</h2>
         <form>
             <div class="form-container">
                 <div class="form-row">
@@ -69,7 +135,7 @@
                             <label for="id">Id:</label>
                         </div>
                         <div>
-                            <input type="text" name="id" id="id" value={id} disabled>
+                            <input type="text" name="id" id="id" bind:value={id} disabled={isIdDisabled} >
                         </div>
                     </div>
                     <div class="form-col">
@@ -97,7 +163,7 @@
                             <label for="rating_rate">Rating:</label>
                         </div>
                         <div class="item">
-                            <input type="number" step="0.1" bind:value={rating_rate} />
+                            <input type="number" min="1" max="5" bind:value={rating_rate} />
                         </div>
                     </div>
                     <div class="form-col">
@@ -124,7 +190,7 @@
                             <label for="img_url">Image URL:</label>
                         </div>
                         <div class="item">
-                            <input type="text" bind:value={image_url} />
+                            <input type="text" bind:value={img_url} />
                         </div>
                     </div>
                 </div>
@@ -211,5 +277,7 @@
     #url-input input {
         width: 406px;
     }
+
+
 
 </style>

@@ -1,19 +1,19 @@
 <script>
     import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, fetchProducts } from "../store"
     import { onMount } from "svelte";
-    import EditModal from "./EditModal.svelte";
+    import Modal from "./Modal.svelte";
 
     let productToEdit = null
-    let isEditModalOpen = false
+    let isModalOpen = false
 
     const openEditModal = (product) => {
         productToEdit = product
-        isEditModalOpen = true
+        isModalOpen = true
     };
 
     const closeEditModal = () => {
         productToEdit = null
-        isEditModalOpen = false
+        isModalOpen = false
     };
 
     const deleteProduct = async (productId) => {
@@ -125,10 +125,12 @@
         <p style="color: white; font-weight: 700; text-align: center; height: 40vh">Please login to continue</p>
     {/if}
 
-    { #if isEditModalOpen}
-        <EditModal
+    { #if isModalOpen}
+        <Modal
             product={productToEdit}
             onClose={closeEditModal}
+            add_or_edit_string="Edit"
+            isIdDisabled={true}
         />  
     {/if}
 </main>

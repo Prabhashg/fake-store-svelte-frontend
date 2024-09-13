@@ -2,9 +2,9 @@
     import { push } from "svelte-spa-router"
     import { is_user_logged_in, page_number, records_per_page } from "../store"
     import { onMount } from "svelte";
-    import AddModal from "./AddModal.svelte";
+    import Modal from "./Modal.svelte";
 
-    let isAddModalOpen = false
+    let isModalOpen = false
 
     const handleHomeClick = () => {
         page_number.set(1)
@@ -21,11 +21,12 @@
     }
 
     const handleAddProductClick = () => {
-        isAddModalOpen = true
+        isModalOpen = true
+        
     }
 
     const closeAddModal = () => {
-        isAddModalOpen = false
+        isModalOpen = false
     }
 
     const handleLogoutClick = async () => {
@@ -88,8 +89,13 @@
         {/if}
         
     </div>
-    {#if isAddModalOpen}
-        <AddModal onClose={closeAddModal}/>
+    {#if isModalOpen}
+        <Modal 
+            product={null}
+            onClose={closeAddModal}
+            add_or_edit_string="Add"
+            isIdDisabled={false}
+        />
     {/if}
 
 </main>
