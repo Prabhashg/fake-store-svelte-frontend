@@ -1,4 +1,4 @@
-import { readable, writable, get } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 export const records_per_page = writable(10);
 export const total_records = writable(10);
@@ -7,27 +7,6 @@ export const max_page = writable(4);
 export const is_user_logged_in = writable(false);
 export const table_data = writable([]);
 export const error_msg = writable("");
-
-const fetchLength = async () => {
-    const url = "http://localhost:8080/api/v1/products/length"
-
-    try {
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            credentials: "include"
-        }).then(res => res.json())
-
-        if(response.ok){
-            total_records.set(response.data.length)
-        }
-
-    } catch (error) {
-        console.log(error)
-    }   
-}
 
 export const fetchProducts = async () => {    
 
@@ -41,7 +20,6 @@ export const fetchProducts = async () => {
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         
         try {
-            fetchLength();
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
@@ -51,7 +29,9 @@ export const fetchProducts = async () => {
             }).then(res => res.json())
     
             if(response.ok){
-                table_data.set(response.data)
+                console.log(response)
+                total_records.set(response.data.count)
+                table_data.set(response.data.products)
                 max_page.set(Math.ceil(get(total_records) / get(records_per_page)))
             } else {
                 error_msg.set("Error in fetching data from server")

@@ -1,5 +1,5 @@
 <script>
-    import { page_number, records_per_page } from "../store";
+    import { records_per_page } from "../store";
 
     let records_per_page_value
 
@@ -9,7 +9,6 @@
 
     const handleClick = () => {
         records_per_page.set(records_per_page_value)
-        page_number.set(1);
     }
 </script>
 

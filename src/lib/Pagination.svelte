@@ -30,7 +30,7 @@
     <div class="container">
         <button on:click={handleStartClick}>Start</button>
         <button on:click={handlePreviousClick}> Prev </button>
-        <input type="text" bind:value={$page_number} disabled>
+        <span>Page {$page_number} 0f {$max_page}</span>
         <button on:click={handleNextClick}>Next</button>
         <button on:click={handleEndClick}>End</button>
     </div>    
@@ -40,6 +40,7 @@
     .container{
         display: flex;
         justify-content: flex-end;
+        align-items: center;
     }
 
     button{
@@ -60,12 +61,16 @@
         
     }
 
-    input{
+    span{
+        height: 28px;
         width: 100px;
-        height: 23px;
+        display: flex;
+        align-items: center;
+        margin: 0 1px;
+        justify-content: center;
+        background-color: rgba(70, 180, 100, 0.8);
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
     }
-
-     input:disabled{
-        background-color: white;
-     }
 </style>

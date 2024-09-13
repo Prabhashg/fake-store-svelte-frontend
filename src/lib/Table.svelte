@@ -1,6 +1,5 @@
 <script>
     import { is_user_logged_in, table_data, error_msg, page_number, records_per_page, fetchProducts } from "../store"
-    import { onMount } from "svelte";
     import Modal from "./Modal.svelte";
 
     let productToEdit = null
@@ -43,13 +42,7 @@
         }
     }
 
-    onMount(() => {
-        if ($is_user_logged_in) {
-            fetchProducts();
-        }
-    })
-
-    $: $page_number, $records_per_page, fetchProducts();
+    $: $records_per_page, $page_number, fetchProducts();
 </script>
 
 <main>
@@ -147,6 +140,7 @@
         table-layout: fixed;
         border: 1px solid rgba(50, 50, 50, 255);
         border-radius: 20px 20px 0 0;
+        border-collapse: collapse;
     }
 
     td, th {
@@ -160,7 +154,7 @@
     }
 
     th {
-        background-color: rgba(38, 38, 38, 255);
+        background-color: rgba(50, 50, 50, 255);
         /* border-top: none; */
         color: rgba(161, 161, 161, 255);
         height: 10vh;
